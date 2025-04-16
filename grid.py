@@ -3,13 +3,14 @@ from pygame.surface import Surface
 
 
 class Grid(Surface):
-    def __init__(self, display: Surface):
+    def __init__(self, display: Surface, cols, lines, bg, color, accent, data):
         super().__init__(display.get_size())
         self.rect = self.get_rect(topleft=(0, 0))
-        self.bg = "#f1f1f1"
-        self.color = "#000000"
-        self.accent = "#ff9966"
-        self.cols, self.lines = 5, 4
+        self.cols, self.lines = cols, lines
+        self.bg = bg
+        self.color = color
+        self.accent = accent
+        self.data = data
         self.front_cells = []
         self.control_delay = 0
         self.build_front_cells()

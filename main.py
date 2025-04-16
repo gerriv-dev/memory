@@ -1,16 +1,19 @@
 import pygame as gui
 import sys
 
+from data_manager import get_data
 from grid import Grid
+
+name, cols, lines, bg, color, accent, data = get_data()
 
 gui.init()
 
-display = gui.display.set_mode((0, 0), gui.FULLSCREEN)
-gui.display.set_caption("Memory")
+display = gui.display.set_mode((800, 600))
+gui.display.set_caption(name)
 
 clock = gui.time.Clock()
 
-items = [Grid(display=display)]
+items = [Grid(display, cols, lines, bg, color, accent, data)]
 
 while True:
     clock.tick(30)
