@@ -18,6 +18,18 @@ class Grid(Surface):
         self.build_back_cells()
         self.build_front_cells()
 
+    def load_image(self, surf: Surface, path, width, height):
+        img = gui.image.load(path).convert_alpha()
+
+        if img.get_width() < img.get_height():
+            scale_factor = width / img.get_width()
+        else:
+            scale_factor = height / img.get_height()
+
+        img = gui.transform.rotozoom(img, 0, scale_factor)
+        img_rect = img.get_rect(center=(surf.get_width() / 2, surf.get_height() / 2))
+        surf.blit(img, img_rect)
+
     def build_back_cells(self):
         cell_width = round(self.get_width() / self.cols)
         cell_height = round(self.get_height() / self.lines)
@@ -38,15 +50,23 @@ class Grid(Surface):
                 cell_rect = cell.get_rect(
                     topleft=(col_index * cell_width, line_index * cell_height)
                 )
-                text = font.render(
-                    self.data[col_index + line_index * self.cols]["value"],
-                    True,
-                    color,
-                )
-                text_rect = text.get_rect(
-                    center=(cell.get_width() / 2, cell.get_height() / 2)
-                )
-                cell.blit(text, text_rect)
+                if self.data[col_index + line_index * self.cols]["type"] == "text":
+                    text = font.render(
+                        self.data[col_index + line_index * self.cols]["value"],
+                        True,
+                        color,
+                    )
+                    text_rect = text.get_rect(
+                        center=(cell.get_width() / 2, cell.get_height() / 2)
+                    )
+                    cell.blit(text, text_rect)
+                else:
+                    self.load_image(
+                        cell,
+                        self.data[col_index + line_index * self.cols]["value"],
+                        cell_width,
+                        cell_height,
+                    )
                 self.back_cells.append([cell, cell_rect])
 
     def build_front_cells(self):
