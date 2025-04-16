@@ -4,15 +4,12 @@ from random import shuffle
 
 
 class Grid(Surface):
-    def __init__(
-        self, display: Surface, cols, lines, front_bg, back_bg, color, accent, data
-    ):
+    def __init__(self, display: Surface, cols, lines, front_bg, back_bg, accent, data):
         super().__init__(display.get_size())
         self.rect = self.get_rect(topleft=(0, 0))
         self.cols, self.lines = cols, lines
         self.front_bg = front_bg
         self.back_bg = back_bg
-        self.color = color
         self.accent = accent
         self.data = data
         self.back_cells = []
