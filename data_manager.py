@@ -13,8 +13,9 @@ def get_data():
     name = content["name"]
     cols = content["cols"]
     lines = content["lines"]
-    bg = content["background-color"]
+    front_bg = content["front-background-color"]
+    back_bg = content["back-background-color"]
     color = content["color"]
     accent = content["accent-color"]
     data = content["data"]
-    return name, cols, lines, bg, color, accent, data
+    return name, cols, lines, front_bg, back_bg, color, accent, data

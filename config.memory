@@ -2,7 +2,8 @@
     "name": "Test123",
     "cols": 5,
     "lines": 4,
-    "background-color": "#f1f1f1",
+    "front-background-color": "#f1f1f1",
+    "back-background-color": "#f1f1f1",
     "color": "#000000",
     "accent-color": "#ff9966",
     "data": [
