@@ -38,7 +38,7 @@ class Grid(Surface):
         color = self.back_bg[1:]
         color = tuple(255 - int(color[i : i + 2], 16) for i in (0, 2, 4))
 
-        while len(self.data) <= self.cols * self.lines:
+        while len(self.data) < self.cols * self.lines:
             self.data.append({"type": "text", "value": "Joker"})
 
         shuffle(self.data)
