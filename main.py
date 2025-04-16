@@ -1,12 +1,16 @@
 import pygame as gui
 import sys
 
+from grid import Grid
+
 gui.init()
 
 display = gui.display.set_mode((0, 0), gui.FULLSCREEN)
 gui.display.set_caption("Memory")
 
 clock = gui.time.Clock()
+
+items = [Grid(display=display)]
 
 while True:
     clock.tick(30)
@@ -20,5 +24,9 @@ while True:
         ):
             gui.quit()
             sys.exit()
+
+    for item in items:
+        item.update()
+        display.blit(item, item.rect)
 
     gui.display.update()
