@@ -8,7 +8,7 @@ name, cols, lines, front_bg, back_bg, color, accent, data = get_data()
 
 gui.init()
 
-display = gui.display.set_mode((800, 600))
+display = gui.display.set_mode((0, 0), gui.FULLSCREEN)
 gui.display.set_caption(name)
 
 clock = gui.time.Clock()

@@ -1,5 +1,6 @@
 import pygame as gui
 from pygame.surface import Surface
+from random import shuffle
 
 
 class Grid(Surface):
@@ -14,9 +15,42 @@ class Grid(Surface):
         self.color = color
         self.accent = accent
         self.data = data
+        self.back_cells = []
         self.front_cells = []
         self.control_delay = 0
+        self.build_back_cells()
         self.build_front_cells()
+
+    def build_back_cells(self):
+        cell_width = round(self.get_width() / self.cols)
+        cell_height = round(self.get_height() / self.lines)
+        font = gui.font.Font(None, 32)
+
+        color = self.back_bg[1:]
+        color = tuple(255 - int(color[i : i + 2], 16) for i in (0, 2, 4))
+
+        while len(self.data) <= self.cols * self.lines:
+            self.data.append({"type": "text", "value": "Joker"})
+
+        shuffle(self.data)
+
+        for line_index, _ in enumerate(range(self.lines)):
+            for col_index, _ in enumerate(range(self.cols)):
+                cell = Surface((cell_width, cell_height))
+                cell.fill(self.back_bg)
+                cell_rect = cell.get_rect(
+                    topleft=(col_index * cell_width, line_index * cell_height)
+                )
+                text = font.render(
+                    self.data[col_index + line_index * self.cols]["value"],
+                    True,
+                    color,
+                )
+                text_rect = text.get_rect(
+                    center=(cell.get_width() / 2, cell.get_height() / 2)
+                )
+                cell.blit(text, text_rect)
+                self.back_cells.append([cell, cell_rect])
 
     def build_front_cells(self):
         cell_width = round(self.get_width() / self.cols)
@@ -26,7 +60,7 @@ class Grid(Surface):
         for line_index, _ in enumerate(range(self.lines)):
             for col_index, _ in enumerate(range(self.cols)):
                 cell = Surface((cell_width, cell_height))
-                cell.fill(self.bg)
+                cell.fill(self.front_bg)
                 cell_rect = cell.get_rect(
                     topleft=(col_index * cell_width, line_index * cell_height)
                 )
@@ -48,6 +82,10 @@ class Grid(Surface):
                 self.front_cells[cell_index][2] = not status
                 self.control_delay = 5
 
+    def show_back_cells(self):
+        for cell, cell_rect in self.back_cells:
+            self.blit(cell, cell_rect)
+
     def show_front_cells(self):
         for cell, cell_rect, status in self.front_cells:
             if status:
@@ -62,4 +100,5 @@ class Grid(Surface):
         else:
             self.handle_user_input()
 
+        self.show_back_cells()
         self.show_front_cells()
