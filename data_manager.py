@@ -22,19 +22,18 @@ def get_data():
             lines = content["lines"]
             front_bg = content["front-background-color"]
             back_bg = content["back-background-color"]
-            color = content["color"]
             accent = content["accent-color"]
             data = content["data"]
 
             if len(data) <= cols * lines:
-                return name, cols, lines, front_bg, back_bg, color, accent, data
+                return name, cols, lines, front_bg, back_bg, accent, data
             else:
                 messagebox.showwarning(
                     "Achtung",
                     "Die Zahl der Zeilen und Spalten stimmt nicht mit der Anzahl der Datensätze überein.",
                 )
 
-        except AttributeError:
+        except:
             messagebox.showerror(
                 "Fehler",
                 "Die geöffnete Datei ist leider nicht kompatibel. Bitte öffnen Sie eine kompatible Datei.",

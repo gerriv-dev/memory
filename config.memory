@@ -1,10 +1,9 @@
 {
-    "name": "Test123",
+    "name": "Memory",
     "cols": 5,
     "lines": 4,
     "front-background-color": "#f1f1f1",
-    "back-background-color": "#f1f1f1",
-    "color": "#000000",
+    "back-background-color": "#222222",
     "accent-color": "#ff9966",
     "data": [
         {

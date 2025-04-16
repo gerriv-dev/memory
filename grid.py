@@ -57,6 +57,9 @@ class Grid(Surface):
         cell_height = round(self.get_height() / self.lines)
         font = gui.font.Font(None, 32)
 
+        color = self.front_bg[1:]
+        color = tuple(255 - int(color[i : i + 2], 16) for i in (0, 2, 4))
+
         for line_index, _ in enumerate(range(self.lines)):
             for col_index, _ in enumerate(range(self.cols)):
                 cell = Surface((cell_width, cell_height))
@@ -65,7 +68,7 @@ class Grid(Surface):
                     topleft=(col_index * cell_width, line_index * cell_height)
                 )
                 text = font.render(
-                    str(col_index + line_index * self.cols + 1), True, self.color
+                    str(col_index + line_index * self.cols + 1), True, color
                 )
                 text_rect = text.get_rect(
                     center=(cell.get_width() / 2, cell.get_height() / 2)

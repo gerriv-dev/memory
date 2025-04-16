@@ -4,7 +4,7 @@ import sys
 from data_manager import get_data
 from grid import Grid
 
-name, cols, lines, front_bg, back_bg, color, accent, data = get_data()
+name, cols, lines, front_bg, back_bg, accent, data = get_data()
 
 gui.init()
 
@@ -13,7 +13,7 @@ gui.display.set_caption(name)
 
 clock = gui.time.Clock()
 
-items = [Grid(display, cols, lines, front_bg, back_bg, color, accent, data)]
+items = [Grid(display, cols, lines, front_bg, back_bg, accent, data)]
 
 while True:
     clock.tick(30)
