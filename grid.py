@@ -18,22 +18,60 @@ class Grid(Surface):
         self.build_back_cells()
         self.build_front_cells()
 
-    def load_image(self, surf: Surface, path, width, height):
+    def load_image(self, surf: Surface, path):
         img = gui.image.load(path).convert_alpha()
 
         if img.get_width() < img.get_height():
-            scale_factor = width / img.get_width()
+            scale_factor = surf.get_width() / img.get_width()
         else:
-            scale_factor = height / img.get_height()
+            scale_factor = surf.get_height() / img.get_height()
 
         img = gui.transform.rotozoom(img, 0, scale_factor)
         img_rect = img.get_rect(center=(surf.get_width() / 2, surf.get_height() / 2))
         surf.blit(img, img_rect)
 
+    def create_text(self, surf: Surface, text: str, color, bg):
+        font = gui.font.Font("NotoSans.ttf", 24)
+
+        words = text.split()
+        words.append("")
+
+        line_surfs = []
+
+        line = ""
+        for word in words:
+            line += " " + word
+            temp_surf = font.render(line, True, color, bg)
+
+            if temp_surf.get_width() <= surf.get_width() - 5:
+                line_surf = temp_surf
+            else:
+                line_surfs.append(line_surf)
+                temp_surf = None
+                line = word
+
+        if temp_surf:
+            line_surfs.append(temp_surf)
+
+        base_surf = Surface(
+            (surf.get_width(), sum([s.get_height() for s in line_surfs]))
+        )
+        base_surf.fill(bg)
+
+        y = 0
+        for line_surf in line_surfs:
+            rect = line_surf.get_rect(midtop=(base_surf.get_width() / 2, y))
+            base_surf.blit(line_surf, rect)
+            y += line_surf.get_height()
+
+        base_rect = base_surf.get_rect(
+            center=(surf.get_width() / 2, surf.get_height() / 2)
+        )
+        surf.blit(base_surf, base_rect)
+
     def build_back_cells(self):
         cell_width = round(self.get_width() / self.cols)
         cell_height = round(self.get_height() / self.lines)
-        font = gui.font.Font(None, 32)
 
         color = self.back_bg[1:]
         color = tuple(255 - int(color[i : i + 2], 16) for i in (0, 2, 4))
@@ -51,28 +89,21 @@ class Grid(Surface):
                     topleft=(col_index * cell_width, line_index * cell_height)
                 )
                 if self.data[col_index + line_index * self.cols]["type"] == "text":
-                    text = font.render(
-                        self.data[col_index + line_index * self.cols]["value"],
-                        True,
-                        color,
-                    )
-                    text_rect = text.get_rect(
-                        center=(cell.get_width() / 2, cell.get_height() / 2)
-                    )
-                    cell.blit(text, text_rect)
-                else:
-                    self.load_image(
+                    self.create_text(
                         cell,
                         self.data[col_index + line_index * self.cols]["value"],
-                        cell_width,
-                        cell_height,
+                        color,
+                        self.back_bg,
+                    )
+                else:
+                    self.load_image(
+                        cell, self.data[col_index + line_index * self.cols]["value"]
                     )
                 self.back_cells.append([cell, cell_rect])
 
     def build_front_cells(self):
         cell_width = round(self.get_width() / self.cols)
         cell_height = round(self.get_height() / self.lines)
-        font = gui.font.Font(None, 32)
 
         color = self.front_bg[1:]
         color = tuple(255 - int(color[i : i + 2], 16) for i in (0, 2, 4))
@@ -84,13 +115,12 @@ class Grid(Surface):
                 cell_rect = cell.get_rect(
                     topleft=(col_index * cell_width, line_index * cell_height)
                 )
-                text = font.render(
-                    str(col_index + line_index * self.cols + 1), True, color
+                self.create_text(
+                    cell,
+                    str(col_index + line_index * self.cols + 1),
+                    color,
+                    self.front_bg,
                 )
-                text_rect = text.get_rect(
-                    center=(cell.get_width() / 2, cell.get_height() / 2)
-                )
-                cell.blit(text, text_rect)
                 self.front_cells.append([cell, cell_rect, True])
 
     def handle_user_input(self):
