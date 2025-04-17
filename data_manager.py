@@ -5,18 +5,20 @@ import sys
 
 def get_data():
     while True:
-        file = filedialog.askopenfile(
+        path = filedialog.askopenfilename(
             title="Wähle eine kompatible Konfigurationsdatei . . .",
             defaultextension=".json",
             filetypes=[("Konfigurationsdateien", "*.memory")],
             initialdir=".",
         )
 
-        if file is None:
+        if path == "":
             sys.exit()
 
         try:
-            content = loads(file.read())
+            with open(path, "r", encoding="utf-8") as file:
+                content = loads(file.read())
+
             name = content["name"]
             cols = content["cols"]
             lines = content["lines"]
